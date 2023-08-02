@@ -65,13 +65,42 @@ public class Main {
 
         System.out.println(noArgumentConstructor); // public com.skillsoft.reflection.Employee()
 
-        Object object = noArgumentConstructor.newInstance();
+        Object object = noArgumentConstructor.newInstance(); // create an object of a specific class
         System.out.println("Object: " + object); // Object: ID: 2087279790, Name: Unknown, Title: Unknown, Salary: 0.0
 
         Employee employee = (Employee) noArgumentConstructor.newInstance();
         System.out.println("Employee: " + employee); // Employee: ID: 678603294, Name: Unknown, Title: Unknown, Salary: 0.
 
         System.out.println();
+
+        System.out.println("*************** 3 argument constructor");
+
+        Constructor<?> threeArgumentConstructor = employeeClass.getConstructor( // return 3 argument constructor
+                String.class, String.class, double.class);
+
+        Employee dorian = (Employee) threeArgumentConstructor.newInstance("Dorian", "MD", 89000);
+        System.out.println("Dorian: " + dorian); // Dorian: ID: 393469625, Name: Dorian, Title: MD, Salary: 89000.0
+
+        System.out.println();
+
+        System.out.println("***************** private constructor");
+
+        Constructor<?> privateConstructor = employeeClass.getDeclaredConstructor(String.class); // get handles to private and protected constructors
+
+//        Employee nancy = (Employee) privateConstructor.newInstance("Nancy"); // java.lang.IllegalAccessException
+//        System.out.println("Nancy: " + nancy);
+//
+//        System.out.println();
+
+        privateConstructor.setAccessible(true); // change the accessibility level of this constructor object
+
+        Employee nancy = (Employee) privateConstructor.newInstance("Nancy");
+        System.out.println("Nancy: " + nancy); // Nancy: ID: 1313337698, Name: Nancy, Title: Unknown, Salary: 0.0
+
+        System.out.println();
+
+        Employee julian = (Employee) threeArgumentConstructor.newInstance("Julian", "MD"); // incorrect number or type of input arguments
+                                                                        // java.lang.IllegalArgumentException
     }
 }
 
