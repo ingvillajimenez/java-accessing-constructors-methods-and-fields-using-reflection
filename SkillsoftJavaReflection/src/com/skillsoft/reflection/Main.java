@@ -1,108 +1,117 @@
 package com.skillsoft.reflection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchFieldException {
 
         Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
 
-        System.out.println("***************** public constructors");
+        System.out.println("************* public fields");
 
-        Constructor<?>[] constructors = employeeClass.getConstructors(); // only returns the public constructors
+        Field[] fields = employeeClass.getFields(); // gets public fields
 
-        for (Constructor<?> constructor : constructors) {
-            System.out.println(constructor);
-            // public com.skillsoft.reflection.Employee()
-            // public com.skillsoft.reflection.Employee(java.lang.String,java.lang.String,double)
+        for (Field field : fields) {
+            System.out.println(field);
+            // public java.lang.String com.skillsoft.reflection.Employee.name
+            // public java.lang.String com.skillsoft.reflection.Employee.title
+            // public volatile java.util.List com.skillsoft.reflection.Employee.committees
         }
 
         System.out.println();
 
-        System.out.println("***************** public + protected + private constructors");
+        System.out.println("************* public + protected + private fields");
 
-        constructors = employeeClass.getDeclaredConstructors(); // returns public + protected + private constructors
+        fields = employeeClass.getDeclaredFields(); // gets public + protected + private fields
 
-        for (Constructor<?> constructor : constructors) {
-            System.out.println("--- Constructor + Parameter types");
-            System.out.println(constructor);
-
-            Class<?>[] parameters = constructor.getParameterTypes(); // gets a list of all the parameters of the constructor object
-            for (Class<?> parameter : parameters) {
-                System.out.println(parameter);
-            }
-            // --- Constructor + Parameter types
-            // public com.skillsoft.reflection.Employee()
-            //--- Constructor + Parameter types
-            // public com.skillsoft.reflection.Employee(java.lang.String,java.lang.String,double)
-            // class java.lang.String
-            // class java.lang.String
-            // double
-            //--- Constructor + Parameter types
-            // protected com.skillsoft.reflection.Employee(java.lang.String,java.lang.String)
-            // class java.lang.String
-            // class java.lang.String
-            //--- Constructor + Parameter types
-            // private com.skillsoft.reflection.Employee(java.lang.String)
-            // class java.lang.String
+        for (Field field: fields) {
+            System.out.println(field);
+            // private static final transient java.util.Random com.skillsoft.reflection.Employee.employeeIdGenerator
+            // private final int com.skillsoft.reflection.Employee.employeeId
+            // public java.lang.String com.skillsoft.reflection.Employee.name
+            // public java.lang.String com.skillsoft.reflection.Employee.title
+            // private double com.skillsoft.reflection.Employee.salary
+            // private com.skillsoft.reflection.Department com.skillsoft.reflection.Employee.department
+            // public volatile java.util.List com.skillsoft.reflection.Employee.committees
+            // protected com.skillsoft.reflection.Employee$Type com.skillsoft.reflection.Employee.employeeType
         }
 
-//        for (Constructor<?> constructor : constructors) {
-//            System.out.println(constructor);
-//            // public com.skillsoft.reflection.Employee()
-//            // public com.skillsoft.reflection.Employee(java.lang.String,java.lang.String,double)
-//            // protected com.skillsoft.reflection.Employee(java.lang.String,java.lang.String)
-//            // private com.skillsoft.reflection.Employee(java.lang.String)
-//        }
+        System.out.println();
+
+        System.out.println("***************** field names, types, generic types");
+
+        for (Field field : fields) {
+            System.out.println("-----");
+            System.out.println("Name: " + field.getName()); // get name of the fields
+            System.out.println("Type: " + field.getType()); // get type of the fields
+            System.out.println("Generic Type: " + field.getGenericType()); // get type parameter of the fields
+            // -----
+            //Name: employeeIdGenerator
+            //Type: class java.util.Random
+            //Generic Type: class java.util.Random
+            //-----
+            //Name: employeeId
+            //Type: int
+            //Generic Type: int
+            //-----
+            //Name: name
+            //Type: class java.lang.String
+            //Generic Type: class java.lang.String
+            //-----
+            //Name: title
+            //Type: class java.lang.String
+            //Generic Type: class java.lang.String
+            //-----
+            //Name: salary
+            //Type: double
+            //Generic Type: double
+            //-----
+            //Name: department
+            //Type: class com.skillsoft.reflection.Department
+            //Generic Type: class com.skillsoft.reflection.Department
+            //-----
+            //Name: committees
+            //Type: interface java.util.List
+            //Generic Type: java.util.List<java.lang.String>
+            //-----
+            //Name: employeeType
+            //Type: class com.skillsoft.reflection.Employee$Type
+            //Generic Type: class com.skillsoft.reflection.Employee$Type
+        }
 
         System.out.println();
 
-        System.out.println("************* No argument constructor");
+        System.out.println("*************** accessing fields by name");
 
-        Constructor<?> noArgumentConstructor = employeeClass.getConstructor(); // return no argument constructor
+        Field nameField = employeeClass.getField("name"); // get public name field
+        Field titleField = employeeClass.getField("title"); // get public title field
+        Field committessField = employeeClass.getField("committees"); // get committees field
 
-        System.out.println(noArgumentConstructor); // public com.skillsoft.reflection.Employee()
-
-        Object object = noArgumentConstructor.newInstance(); // create an object of a specific class
-        System.out.println("Object: " + object); // Object: ID: 2087279790, Name: Unknown, Title: Unknown, Salary: 0.0
-
-        Employee employee = (Employee) noArgumentConstructor.newInstance();
-        System.out.println("Employee: " + employee); // Employee: ID: 678603294, Name: Unknown, Title: Unknown, Salary: 0.
+        System.out.println(nameField); // public java.lang.String com.skillsoft.reflection.Employee.name
+        System.out.println(titleField); // public java.lang.String com.skillsoft.reflection.Employee.title
+        System.out.println(committessField); // public volatile java.util.List com.skillsoft.reflection.Employee.committees
 
         System.out.println();
 
-        System.out.println("*************** 3 argument constructor");
-
-        Constructor<?> threeArgumentConstructor = employeeClass.getConstructor( // return 3 argument constructor
-                String.class, String.class, double.class);
-
-        Employee dorian = (Employee) threeArgumentConstructor.newInstance("Dorian", "MD", 89000);
-        System.out.println("Dorian: " + dorian); // Dorian: ID: 393469625, Name: Dorian, Title: MD, Salary: 89000.0
-
-        System.out.println();
-
-        System.out.println("***************** private constructor");
-
-        Constructor<?> privateConstructor = employeeClass.getDeclaredConstructor(String.class); // get handles to private and protected constructors
-
-//        Employee nancy = (Employee) privateConstructor.newInstance("Nancy"); // java.lang.IllegalAccessException
-//        System.out.println("Nancy: " + nancy);
+//        System.out.println("************* accessing private fields by name (error)");
 //
-//        System.out.println();
+//        Field salaryField = employeeClass.getField("salary"); // Field 'salary' is not public, java.lang.NoSuchFieldException
+//        Field employeeIdField = employeeClass.getField("employeeId"); // Field 'employeeId' is not public, java.lang.NoSuchFieldException
 
-        privateConstructor.setAccessible(true); // change the accessibility level of this constructor object
+        System.out.println("*************** accessing private fields by name");
 
-        Employee nancy = (Employee) privateConstructor.newInstance("Nancy");
-        System.out.println("Nancy: " + nancy); // Nancy: ID: 1313337698, Name: Nancy, Title: Unknown, Salary: 0.0
+        Field salaryField = employeeClass.getDeclaredField("salary"); // get private salary field
+        Field employeeIdField = employeeClass.getDeclaredField("employeeId"); // get private employeeId field
+
+        System.out.println(salaryField); // private double com.skillsoft.reflection.Employee.salary
+        System.out.println(employeeIdField); // private final int com.skillsoft.reflection.Employee.employeeId
 
         System.out.println();
-
-        Employee julian = (Employee) threeArgumentConstructor.newInstance("Julian", "MD"); // incorrect number or type of input arguments
-                                                                        // java.lang.IllegalArgumentException
     }
 }
 
 // https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/reflect/Constructor.html
 // Java Docs for Reflection APIs for java.lang.reflect.Constructor
+
+// https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/FIeld.html
+// Java Docs for Reflection APIs for java.lang.reflect.Field
