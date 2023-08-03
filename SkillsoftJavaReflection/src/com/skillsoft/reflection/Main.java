@@ -19,16 +19,72 @@ public class Main {
 
         System.out.println("************** setting name and title");
 
-        Field nameField = employeeClass.getField("name");
+        Field nameField = employeeClass.getField("name"); // get public name field
         nameField.set(employee, "Jason");
 
-        Field titleField = employeeClass.getField("title");
+        Field titleField = employeeClass.getField("title"); // get public name field
         titleField.set(employee, "Analyst");
 
         System.out.println(employee); //  167349396, Name: Jason, Title: Analyst, Salary: 0.0, Dept: null, Committees: null, Type: FULLTIME
 
         System.out.println("Name: " + nameField.get(employee)); // Name: Jason
         System.out.println("Title: " + titleField.get(employee)); // Title: Analyst
+
+        System.out.println();
+
+        System.out.println("*************** setting salary");
+
+        Field salaryField = employeeClass.getDeclaredField("salary"); // get private salary field
+
+        salaryField.setAccessible(true); // salary field is now accessible
+        salaryField.setDouble(employee, 125000); // set double salary field
+
+        System.out.println(employee); // ID: 2096532896, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: null, Committees: null, Type: FULLTIME
+        System.out.println("Salary: " + salaryField.getDouble(employee)); // Salary: 125000.0
+
+        System.out.println();
+
+        System.out.println("**************** setting employee ID");
+
+        Field employeeIdField = employeeClass.getDeclaredField("employeeId");
+
+        employeeIdField.setAccessible(true); // set accessibility level
+        employeeIdField.setInt(employee, 1001); // set int employeeId field
+
+        System.out.println(employee); // ID: 1001, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: null, Committees: null, Type: FULLTIME
+        System.out.println("Employee ID: " + employeeIdField.getInt(employee)); // Employee ID: 1001
+
+        System.out.println();
+
+        System.out.println("*************** setting employee department, committees, type");
+
+        Field deparmentField = employeeClass.getDeclaredField("department");
+        Field committeesField = employeeClass.getDeclaredField("committees");
+        Field employeeTypeField = employeeClass.getDeclaredField("employeeType");
+
+        class Engineering extends Department {
+
+            Engineering() {
+                super("Engineering");
+            }
+        }
+
+        deparmentField.setAccessible(true);
+        deparmentField.set(employee, new Engineering());
+
+        List<String> committeesList = new ArrayList<>();
+        committeesList.add("Promotion");
+        committeesList.add("Christmas");
+
+        committeesField.set(employee, committeesList);
+
+        employeeTypeField.setAccessible(true);
+        employeeTypeField.set(employee, Employee.Type.CONTRACT);
+
+        System.out.println(employee); // ID: 1001, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: Engineering, Committees: [Promotion, Christmas], Type: CONTRACT
+        System.out.println("Employee department: " + deparmentField.get(employee)); // Employee department: Engineering
+        System.out.println("Employee committees: " + committeesField.get(employee)); // Employee committees: [Promotion, Christmas]
+        System.out.println("Employee type: " + employeeTypeField.get(employee)); // Employee type: CONTRACT
 
         System.out.println();
 
