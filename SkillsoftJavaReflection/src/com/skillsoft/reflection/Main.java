@@ -6,107 +6,118 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) throws ClassNotFoundException {
 
-        Class<?> objectClass = Class.forName("java.lang.Object");
+        Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
 
         System.out.println("************** accessing method properties");
 
-        Method[] methods = objectClass.getMethods();
+        Method[] methods = employeeClass.getDeclaredMethods(); // gets public, protected, private methods
 
-        for (Method method : methods) {
-            System.out.println("------------------");
+        for (Method method: methods) {
+            System.out.println("-------------");
             System.out.println(method.getName());
             System.out.println("Parameter count: " + method.getParameterCount());
             System.out.println("Parameter types: " + Arrays.toString(method.getParameterTypes()));
             System.out.println("Return type: " + method.getReturnType());
-            // ------------------
-            //wait
-            //Parameter count: 1
-            //Parameter types: [long]
-            //Return type: void
-            //------------------
-            //wait
-            //Parameter count: 2
-            //Parameter types: [long, int]
-            //Return type: void
-            //------------------
-            //wait
+            System.out.println("Exception types: " + Arrays.toString(method.getExceptionTypes()));
+            // -------------
+            //getName
             //Parameter count: 0
             //Parameter types: []
-            //Return type: void
-            //------------------
-            //equals
-            //Parameter count: 1
-            //Parameter types: [class java.lang.Object]
-            //Return type: boolean
-            //------------------
+            //Return type: class java.lang.String
+            //Exception types: []
+            //-------------
             //toString
             //Parameter count: 0
             //Parameter types: []
             //Return type: class java.lang.String
-            //------------------
-            //hashCode
+            //Exception types: []
+            //-------------
+            //setName
+            //Parameter count: 1
+            //Parameter types: [class java.lang.String]
+            //Return type: void
+            //Exception types: []
+            //-------------
+            //save
+            //Parameter count: 3
+            //Parameter types: [class java.lang.String, class java.lang.String, class java.lang.String]
+            //Return type: boolean
+            //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException, class java.util.concurrent.ExecutionException]
+            //-------------
+            //save
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: boolean
+            //Exception types: [class java.lang.IllegalAccessException]
+            //-------------
+            //save
+            //Parameter count: 1
+            //Parameter types: [class java.lang.String]
+            //Return type: boolean
+            //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException]
+            //-------------
+            //computeBonusInternal
+            //Parameter count: 1
+            //Parameter types: [float]
+            //Return type: double
+            //Exception types: []
+            //-------------
+            //createEmployee
+            //Parameter count: 3
+            //Parameter types: [class java.lang.String, class java.lang.String, double]
+            //Return type: class com.skillsoft.reflection.Employee
+            //Exception types: []
+            //-------------
+            //getEmployeeId
             //Parameter count: 0
             //Parameter types: []
             //Return type: int
-            //------------------
-            //getClass
-            //Parameter count: 0
-            //Parameter types: []
-            //Return type: class java.lang.Class
-            //------------------
-            //notify
+            //Exception types: []
+            //-------------
+            //computeTotalSalary
+            //Parameter count: 1
+            //Parameter types: [float]
+            //Return type: double
+            //Exception types: []
+            //-------------
+            //incrementSalary
+            //Parameter count: 1
+            //Parameter types: [float]
+            //Return type: void
+            //Exception types: []
+            //-------------
+            //printEmployeeDetails
             //Parameter count: 0
             //Parameter types: []
             //Return type: void
-            //------------------
-            //notifyAll
+            //Exception types: []
+            //-------------
+            //getTitle
             //Parameter count: 0
             //Parameter types: []
+            //Return type: class java.lang.String
+            //Exception types: []
+            //-------------
+            //setTitle
+            //Parameter count: 1
+            //Parameter types: [class java.lang.String]
             //Return type: void
+            //Exception types: []
+            //-------------
+            //getSalary
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: double
+            //Exception types: []
+            //-------------
+            //setSalary
+            //Parameter count: 1
+            //Parameter types: [double]
+            //Return type: void
+            //Exception types: []
         }
 
         System.out.println();
-
-//        System.out.println("************** accessing public methods");
-//
-//        Method[] methods = objectClass.getMethods(); // returns the public methods
-//
-//        for (Method method : methods) {
-//            System.out.println(method);
-//            // public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
-//            // public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
-//            // public final void java.lang.Object.wait() throws java.lang.InterruptedException
-//            // public boolean java.lang.Object.equals(java.lang.Object)
-//            // public java.lang.String java.lang.Object.toString()
-//            // public native int java.lang.Object.hashCode()
-//            // public final native java.lang.Class java.lang.Object.getClass()
-//            // public final native void java.lang.Object.notify()
-//            // public final native void java.lang.Object.notifyAll()
-//        }
-//
-//        System.out.println();
-//
-//        System.out.println("************** accessing public + protected + private methods");
-//
-//        methods = objectClass.getDeclaredMethods(); // returns public + protected + private methods
-//
-//        for (Method method : methods) {
-//            System.out.println(method);
-//            // protected void java.lang.Object.finalize() throws java.lang.Throwable
-//            // public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
-//            // public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
-//            // public final void java.lang.Object.wait() throws java.lang.InterruptedException
-//            // public boolean java.lang.Object.equals(java.lang.Object)
-//            // public java.lang.String java.lang.Object.toString()
-//            // public native int java.lang.Object.hashCode()
-//            // public final native java.lang.Class java.lang.Object.getClass()
-//            // protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException
-//            // public final native void java.lang.Object.notify()
-//            // public final native void java.lang.Object.notifyAll()
-//            // private static native void java.lang.Object.registerNatives()
-//        }
-//
-//        System.out.println();
     }
 }
 
