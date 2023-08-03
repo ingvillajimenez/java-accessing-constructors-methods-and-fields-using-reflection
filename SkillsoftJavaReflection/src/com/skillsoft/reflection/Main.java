@@ -1,138 +1,109 @@
 package com.skillsoft.reflection;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException,
-            InstantiationException, NoSuchFieldException {
+    public static void main(String[] args) throws ClassNotFoundException {
 
-        Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
+        Class<?> objectClass = Class.forName("java.lang.Object");
 
-        Employee employee = (Employee) employeeClass.getConstructor().newInstance();
+        System.out.println("************** accessing method properties");
 
-        System.out.println(employee); // 167349396, Name: Unknown, Title: Unknown, Salary: 0.0, Dept: null, Committees: null, Type: FULLTIME
+        Method[] methods = objectClass.getMethods();
 
-        System.out.println("************** setting name and title");
-
-        Field nameField = employeeClass.getField("name"); // get public name field
-        nameField.set(employee, "Jason");
-
-        Field titleField = employeeClass.getField("title"); // get public name field
-        titleField.set(employee, "Analyst");
-
-        System.out.println(employee); //  167349396, Name: Jason, Title: Analyst, Salary: 0.0, Dept: null, Committees: null, Type: FULLTIME
-
-        System.out.println("Name: " + nameField.get(employee)); // Name: Jason
-        System.out.println("Title: " + titleField.get(employee)); // Title: Analyst
-
-        System.out.println();
-
-        System.out.println("*************** setting salary");
-
-        Field salaryField = employeeClass.getDeclaredField("salary"); // get private salary field
-
-        salaryField.setAccessible(true); // salary field is now accessible
-        salaryField.setDouble(employee, 125000); // set double salary field
-
-        System.out.println(employee); // ID: 2096532896, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: null, Committees: null, Type: FULLTIME
-        System.out.println("Salary: " + salaryField.getDouble(employee)); // Salary: 125000.0
-
-        System.out.println();
-
-        System.out.println("**************** setting employee ID");
-
-        Field employeeIdField = employeeClass.getDeclaredField("employeeId");
-
-        employeeIdField.setAccessible(true); // set accessibility level
-        employeeIdField.setInt(employee, 1001); // set int employeeId field
-
-        System.out.println(employee); // ID: 1001, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: null, Committees: null, Type: FULLTIME
-        System.out.println("Employee ID: " + employeeIdField.getInt(employee)); // Employee ID: 1001
-
-        System.out.println();
-
-        System.out.println("*************** setting employee department, committees, type");
-
-        Field deparmentField = employeeClass.getDeclaredField("department");
-        Field committeesField = employeeClass.getDeclaredField("committees");
-        Field employeeTypeField = employeeClass.getDeclaredField("employeeType");
-
-        class Engineering extends Department {
-
-            Engineering() {
-                super("Engineering");
-            }
+        for (Method method : methods) {
+            System.out.println("------------------");
+            System.out.println(method.getName());
+            System.out.println("Parameter count: " + method.getParameterCount());
+            System.out.println("Parameter types: " + Arrays.toString(method.getParameterTypes()));
+            System.out.println("Return type: " + method.getReturnType());
+            // ------------------
+            //wait
+            //Parameter count: 1
+            //Parameter types: [long]
+            //Return type: void
+            //------------------
+            //wait
+            //Parameter count: 2
+            //Parameter types: [long, int]
+            //Return type: void
+            //------------------
+            //wait
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: void
+            //------------------
+            //equals
+            //Parameter count: 1
+            //Parameter types: [class java.lang.Object]
+            //Return type: boolean
+            //------------------
+            //toString
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: class java.lang.String
+            //------------------
+            //hashCode
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: int
+            //------------------
+            //getClass
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: class java.lang.Class
+            //------------------
+            //notify
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: void
+            //------------------
+            //notifyAll
+            //Parameter count: 0
+            //Parameter types: []
+            //Return type: void
         }
 
-        deparmentField.setAccessible(true);
-        deparmentField.set(employee, new Engineering());
-
-        List<String> committeesList = new ArrayList<>();
-        committeesList.add("Promotion");
-        committeesList.add("Christmas");
-
-        committeesField.set(employee, committeesList);
-
-        employeeTypeField.setAccessible(true);
-        employeeTypeField.set(employee, Employee.Type.CONTRACT);
-
-        System.out.println(employee); // ID: 1001, Name: Jason, Title: Analyst, Salary: 125000.0, Dept: Engineering, Committees: [Promotion, Christmas], Type: CONTRACT
-        System.out.println("Employee department: " + deparmentField.get(employee)); // Employee department: Engineering
-        System.out.println("Employee committees: " + committeesField.get(employee)); // Employee committees: [Promotion, Christmas]
-        System.out.println("Employee type: " + employeeTypeField.get(employee)); // Employee type: CONTRACT
-
         System.out.println();
 
-//        Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
+//        System.out.println("************** accessing public methods");
 //
-//        System.out.println("*********** field modifiers");
+//        Method[] methods = objectClass.getMethods(); // returns the public methods
 //
-//        Field[] fields = employeeClass.getDeclaredFields();
+//        for (Method method : methods) {
+//            System.out.println(method);
+//            // public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+//            // public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+//            // public final void java.lang.Object.wait() throws java.lang.InterruptedException
+//            // public boolean java.lang.Object.equals(java.lang.Object)
+//            // public java.lang.String java.lang.Object.toString()
+//            // public native int java.lang.Object.hashCode()
+//            // public final native java.lang.Class java.lang.Object.getClass()
+//            // public final native void java.lang.Object.notify()
+//            // public final native void java.lang.Object.notifyAll()
+//        }
 //
-//        for (Field field : fields) {
+//        System.out.println();
 //
-//            int modifier = field.getModifiers();
-//            System.out.println("---------------");
-//            System.out.println(field.getName());
-//            System.out.println(Integer.toBinaryString(modifier));
-//            System.out.println(Modifier.toString(modifier)); // get all the modifiers as String representation for the int modifier value
-//            // ---------------
-//            //employeeIdGenerator
-//            //10011010
-//            //private static final transient
-//            //---------------
-//            //employeeId
-//            //10010
-//            //private final
-//            //---------------
-//            //name
-//            //1
-//            //public
-//            //---------------
-//            //title
-//            //1
-//            //public
-//            //---------------
-//            //salary
-//            //10
-//            //private
-//            //---------------
-//            //department
-//            //10
-//            //private
-//            //---------------
-//            //committees
-//            //1000001
-//            //public volatile
-//            //---------------
-//            //employeeType
-//            //100
-//            //protected
+//        System.out.println("************** accessing public + protected + private methods");
+//
+//        methods = objectClass.getDeclaredMethods(); // returns public + protected + private methods
+//
+//        for (Method method : methods) {
+//            System.out.println(method);
+//            // protected void java.lang.Object.finalize() throws java.lang.Throwable
+//            // public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+//            // public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+//            // public final void java.lang.Object.wait() throws java.lang.InterruptedException
+//            // public boolean java.lang.Object.equals(java.lang.Object)
+//            // public java.lang.String java.lang.Object.toString()
+//            // public native int java.lang.Object.hashCode()
+//            // public final native java.lang.Class java.lang.Object.getClass()
+//            // protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException
+//            // public final native void java.lang.Object.notify()
+//            // public final native void java.lang.Object.notifyAll()
+//            // private static native void java.lang.Object.registerNatives()
 //        }
 //
 //        System.out.println();
@@ -142,5 +113,8 @@ public class Main {
 // https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/reflect/Constructor.html
 // Java Docs for Reflection APIs for java.lang.reflect.Constructor
 
-// https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/FIeld.html
+// https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html
 // Java Docs for Reflection APIs for java.lang.reflect.Field
+
+// https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html
+// Java Docs for Reflection APIs for java.lang.reflect.Method
