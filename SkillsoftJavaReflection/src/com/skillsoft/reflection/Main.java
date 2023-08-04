@@ -43,7 +43,97 @@ public class Main {
 
         Method toStringMethod = employeeClass.getMethod("toString");
         printMethodProperties(toStringMethod);
+        // -----------------
+        //toString
+        //Parameter count: 0
+        //Parameter types: []
+        //Return type: class java.lang.String
+        //Exception types: []
+        //Annotations: []
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: null
+        //Modifiers: 1
+        //Modifiers (string representation): public
 
+        Method createEmployeeMethod = employeeClass.getMethod("createEmployee",
+                String.class, String.class, double.class);
+        printMethodProperties(createEmployeeMethod);
+        // -----------------
+        //createEmployee
+        //Parameter count: 3
+        //Parameter types: [class java.lang.String, class java.lang.String, double]
+        //Return type: class com.skillsoft.reflection.Employee
+        //Exception types: []
+        //Annotations: []
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: null
+        //Modifiers: 1001
+        //Modifiers (string representation): public static
+
+        Method saveFilename = employeeClass.getMethod("save", String.class);
+        printMethodProperties(saveFilename);
+        // -----------------
+        //save
+        //Parameter count: 1
+        //Parameter types: [class java.lang.String]
+        //Return type: boolean
+        //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException]
+        //Annotations: []
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: null
+        //Modifiers: 1
+        //Modifiers (string representation): public
+
+        // NOTE: The @Deprecated annotation is retained at runtime (retention policy set to RUNTIME)
+        Method printEmployeeDetailsMethod = employeeClass.getMethod("printEmployeeDetails");
+        printMethodProperties(printEmployeeDetailsMethod);
+        //-----------------
+        //printEmployeeDetails
+        //Parameter count: 0
+        //Parameter types: []
+        //Return type: void
+        //Exception types: []
+        //Annotations: [@java.lang.Deprecated(forRemoval=false, since="")]
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: @java.lang.Deprecated(forRemoval=false, since="")
+        //Modifiers: 1
+        //Modifiers (string representation): public
+
+        Method saveDatabaseMethod = employeeClass.getDeclaredMethod("save",
+                String.class, String.class, String.class);
+        printMethodProperties(saveDatabaseMethod);
+        //-----------------
+        //save
+        //Parameter count: 3
+        //Parameter types: [class java.lang.String, class java.lang.String, class java.lang.String]
+        //Return type: boolean
+        //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException, class java.util.concurrent.ExecutionException]
+        //Annotations: []
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: null
+        //Modifiers: 100
+        //Modifiers (string representation): protected
+
+        // NOTE: The modifiers include strictfp for strict, floating point calculations
+        Method toRadiansMethod = StrictMath.class.getMethod("toRadians", double.class);
+        printMethodProperties(toRadiansMethod);
+        //-----------------
+        //toRadians
+        //Parameter count: 1
+        //Parameter types: [double]
+        //Return type: double
+        //Exception types: []
+        //Annotations: []
+        //Check for @Override annotation: null
+        //Check for @SuppressWarnings annotation: null
+        //Check for @Deprecated annotation: null
+        //Modifiers: 100000001001
+        //Modifiers (string representation): public static strictfp
     }
 }
 
