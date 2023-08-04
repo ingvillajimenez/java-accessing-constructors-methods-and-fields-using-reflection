@@ -82,6 +82,40 @@ public class Main {
 
         System.out.println();
 
+        System.out.println("*************** setter invocation");
+
+        for (Method method : employeeClass.getDeclaredMethods()) {
+            if (isSetter(method)) {
+                if (method.getName().equals("setName")) {
+                    method.invoke(employee, "Nora Roberts");
+                } else if (method.getName().equals("setTitle")) {
+                    method.invoke(employee, "Accounts Director");
+                } else if (method.getName().equals("setSalary")) {
+                    method.invoke(employee, 50000);
+                }
+            }
+        }
+
+        System.out.println("Updated employee: " + employee); // Updated employee: ID: 130121672, Name: Nora Roberts, Title: Accounts Director, Salary: 50000.0
+
+        System.out.println();
+
+        System.out.println("************* protected invocation");
+
+        Method saveMethod = employeeClass.getDeclaredMethod("save",
+                String.class, String.class, String.class);
+
+        saveMethod.setAccessible(true);
+
+        saveMethod.invoke(employee, "<some connection string>", "<some username>", "some password");  // save(connectionString, username, password)
+
+        Method computeBonusInternalMethod = employeeClass.getDeclaredMethod("computeBonusInternal",
+                float.class);
+
+        computeBonusInternalMethod.setAccessible(true);
+
+        System.out.println(computeBonusInternalMethod.invoke(employee, 0.1f)); // 5000.000074505806
+
 //        Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
 //
 //        System.out.println("*************** accessing getters and setters");
