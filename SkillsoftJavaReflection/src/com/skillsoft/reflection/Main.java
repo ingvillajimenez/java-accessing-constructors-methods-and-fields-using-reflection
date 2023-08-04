@@ -1,139 +1,107 @@
 package com.skillsoft.reflection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 
 public class Main {
 
-    private static void printMethodProperties(Method method) {
+    private static boolean isGetter(Method method) {
 
-        System.out.println("-----------------");
-        System.out.println(method.getName());
-        System.out.println("Parameter count: " + method.getParameterCount());
-        System.out.println("Parameter types: " + Arrays.toString(method.getParameterTypes()));
-        System.out.println("Return type: " + method.getReturnType());
+        if (!method.getName().startsWith("get")) {
+            return false;
+        }
 
-        System.out.println("Exception types: " + Arrays.toString(method.getExceptionTypes()));
+        if (!((method.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC)) {
+            return false;
+        }
 
-        // NOTE: Returns annotations that are directly present on this element.
-        // NOTE: The @Override and @SuppressWarnings annotation is not retained for
-        // reflective access
-        System.out.println("Annotations: " + Arrays.toString(method.getDeclaredAnnotations()));
-        System.out.println("Check for @Override annotation: " +
-                method.getAnnotation(Override.class)); // Annotation 'Override.class' is not retained for reflective access, retention policy is set to source
-        System.out.println("Check for @SuppressWarnings annotation: " +
-                method.getAnnotation(SuppressWarnings.class)); // Annotation 'SuppressWarning.class' is not retained for reflective access
-        System.out.println("Check for @Deprecated annotation: " +
-                method.getAnnotation(Deprecated.class)); // retention policy is set to runtime
+        if (method.getReturnType().equals(void.class)) {
+            return false;
+        }
 
-        int modifiers = method.getModifiers();
+        if (method.getParameterCount() != 0) {
+            return false;
+        }
 
-        System.out.println("Modifiers: " + Integer.toBinaryString(modifiers));
-        System.out.println("Modifiers (string representation): " + Modifier.toString(modifiers));
-
-        System.out.println();
+        return true;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException {
+    private static boolean isSetter(Method method) {
+
+        if (!method.getName().startsWith("set")) {
+            return false;
+        }
+
+        if (!((method.getModifiers() & Modifier.PUBLIC) == Modifier.PUBLIC)) {
+            return false;
+        }
+
+        if (!method.getReturnType().equals(void.class)) {
+            return false;
+        }
+
+        if (method.getParameterCount() != 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args)
+            throws ClassNotFoundException, NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
 
         Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
 
-        System.out.println("*************** accessing method by name");
+        System.out.println("************** public static invocation");
 
-        Method toStringMethod = employeeClass.getMethod("toString");
-        printMethodProperties(toStringMethod);
-        // -----------------
-        //toString
-        //Parameter count: 0
-        //Parameter types: []
-        //Return type: class java.lang.String
-        //Exception types: []
-        //Annotations: []
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: null
-        //Modifiers: 1
-        //Modifiers (string representation): public
-
-        Method createEmployeeMethod = employeeClass.getMethod("createEmployee",
+        Method createrEmployeeMethod = employeeClass.getMethod("createEmployee",
                 String.class, String.class, double.class);
-        printMethodProperties(createEmployeeMethod);
-        // -----------------
-        //createEmployee
-        //Parameter count: 3
-        //Parameter types: [class java.lang.String, class java.lang.String, double]
-        //Return type: class com.skillsoft.reflection.Employee
-        //Exception types: []
-        //Annotations: []
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: null
-        //Modifiers: 1001
-        //Modifiers (string representation): public static
 
-        Method saveFilename = employeeClass.getMethod("save", String.class);
-        printMethodProperties(saveFilename);
-        // -----------------
-        //save
-        //Parameter count: 1
-        //Parameter types: [class java.lang.String]
-        //Return type: boolean
-        //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException]
-        //Annotations: []
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: null
-        //Modifiers: 1
-        //Modifiers (string representation): public
+        // NOTE: For static method invocation, pass in "null" as the first input argument, there
+        // is no object against which the method is invoked
+        Employee employee = (Employee) createrEmployeeMethod.invoke(
+                null, "Nora", "Accounts Manager", 45000);
 
-        // NOTE: The @Deprecated annotation is retained at runtime (retention policy set to RUNTIME)
-        Method printEmployeeDetailsMethod = employeeClass.getMethod("printEmployeeDetails");
-        printMethodProperties(printEmployeeDetailsMethod);
-        //-----------------
-        //printEmployeeDetails
-        //Parameter count: 0
-        //Parameter types: []
-        //Return type: void
-        //Exception types: []
-        //Annotations: [@java.lang.Deprecated(forRemoval=false, since="")]
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: @java.lang.Deprecated(forRemoval=false, since="")
-        //Modifiers: 1
-        //Modifiers (string representation): public
+        System.out.println("Employee: " + employee); // Employee: ID: 212792334, Name: Nora, Title: Accounts Manager, Salary: 45000.0
 
-        Method saveDatabaseMethod = employeeClass.getDeclaredMethod("save",
-                String.class, String.class, String.class);
-        printMethodProperties(saveDatabaseMethod);
-        //-----------------
-        //save
-        //Parameter count: 3
-        //Parameter types: [class java.lang.String, class java.lang.String, class java.lang.String]
-        //Return type: boolean
-        //Exception types: [class java.lang.IllegalAccessException, class java.lang.InterruptedException, class java.util.concurrent.ExecutionException]
-        //Annotations: []
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: null
-        //Modifiers: 100
-        //Modifiers (string representation): protected
+        System.out.println();
 
-        // NOTE: The modifiers include strictfp for strict, floating point calculations
-        Method toRadiansMethod = StrictMath.class.getMethod("toRadians", double.class);
-        printMethodProperties(toRadiansMethod);
-        //-----------------
-        //toRadians
-        //Parameter count: 1
-        //Parameter types: [double]
-        //Return type: double
-        //Exception types: []
-        //Annotations: []
-        //Check for @Override annotation: null
-        //Check for @SuppressWarnings annotation: null
-        //Check for @Deprecated annotation: null
-        //Modifiers: 100000001001
-        //Modifiers (string representation): public static strictfp
+        System.out.println("****************** getter invocation");
+
+        for (Method method : employeeClass.getDeclaredMethods()) {
+            if (isGetter(method)) {
+                System.out.println(method.invoke(employee));
+                //Nora
+                //726270105
+                //Accounts Manager
+                //45000.0
+            }
+        }
+
+        System.out.println();
+
+//        Class<?> employeeClass = Class.forName("com.skillsoft.reflection.Employee");
+//
+//        System.out.println("*************** accessing getters and setters");
+//
+//        Method[] methods = employeeClass.getDeclaredMethods();
+//
+//        for (Method method : methods) {
+//            if (isGetter(method)) {
+//                System.out.println(method.getName() + " getter");
+//            } else if (isSetter(method)) {
+//                System.out.println(method.getName() + " setter");
+//            }
+//            //getName getter
+//            //setName setter
+//            //getEmployeeId getter
+//            //getTitle getter
+//            //setTitle setter
+//            //getSalary getter
+//            //setSalary setter
+//        }
     }
 }
 
